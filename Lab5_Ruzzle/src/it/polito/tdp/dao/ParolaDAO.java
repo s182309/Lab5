@@ -20,11 +20,15 @@ public class ParolaDAO {
 			Connection conn = DriverManager.getConnection(jdbcURL);
 			String sql = "select nome from parola where nome = ? ";
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, s);
+			st.setString(1, s.toLowerCase());
 			ResultSet res = st.executeQuery();
 			if(res.next()){
+				res.close();
+				conn.close();
 				return true;
 			}
+			res.close();
+			conn.close();
 			return false;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -33,9 +37,38 @@ public class ParolaDAO {
 		return false;
 	}
 	
+	public boolean isContenuto(String s){
+		
+		try {
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			String sql = "select nome from parola";
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet res = st.executeQuery();
+			while(res.next()){
+				if( res.getString("nome").contains(s.toLowerCase()) ){
+				
+				res.close();
+				conn.close();
+				return true;
+				}
+			}
+			res.close();
+			conn.close();
+			return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
+	
 	public static void main (String[] args){
 		ParolaDAO p = new ParolaDAO();
-		System.out.println(p.isPresent("ciao"));
+		long in = System.nanoTime();
+		System.out.println(p.isContenuto("risp"));
+		long end = System.nanoTime();
+		System.out.println( (end-in)/1000000000+" s" );
 	}
 
 }

@@ -12,9 +12,12 @@ public class Parola {
 		parola = new ArrayList <Posizione> ();
 	}
 	
+	public Parola( Parola p){
+		this.parola = p.parola;
+	}
 	
 	
-	public void set( Posizione s){
+	public void set(Posizione s){
 			parola.add(s);
 	
 	}
@@ -39,6 +42,13 @@ public class Parola {
 		return parola.size();
 	}
 	
+	public String toString(Quadrato q){
+		String s = "";
+		for(Posizione position : this.get())
+			s += q.get(position);
+		
+		return s;
+	}
 
 	@Override
 	public int hashCode() {

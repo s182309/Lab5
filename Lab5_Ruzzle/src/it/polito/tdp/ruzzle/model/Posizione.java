@@ -30,12 +30,12 @@ public class Posizione {
 		this.colonna = colonna;
 	}
 
-	public List<Posizione> getAdiacenti() {
+	public List<Posizione> getAdiacenti(Quadrato q) {
 
 		List<Posizione> adiacenti = new ArrayList<Posizione>();
 		for (int i = this.riga - 1; i <= this.riga + 1; i++) {
 			for (int j = this.colonna - 1; j <= this.colonna + 1; j++) {
-				if(posizioneValida(new Posizione( i , j)))
+				if(posizioneValida(new Posizione( i , j) , q))
 				adiacenti.add(new Posizione(i, j));
 			}
 		}
@@ -46,9 +46,9 @@ public class Posizione {
 
 	}
 
-	private boolean posizioneValida(Posizione pos) {
+	private boolean posizioneValida(Posizione pos , Quadrato q) {
 
-		if (pos.getRiga() < 1 || pos.getColonna() < 1 || pos.getRiga() > 4 || pos.getColonna() > 4)
+		if (pos.getRiga() < 1 || pos.getColonna() < 1 || pos.getRiga() > q.getLato() || pos.getColonna() > q.getLato())
 			return false;
 		return true;
 	}
@@ -78,10 +78,6 @@ public class Posizione {
 		return true;
 	}
 
-	public static void main(String[] args) {
-		Posizione p = new Posizione(2 , 4);
-		for (Posizione c : p.getAdiacenti())
-			System.out.println(c.riga + " " + c.colonna);
-	}
+	
 
 }

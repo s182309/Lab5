@@ -8,7 +8,7 @@ import it.polito.tdp.dao.ParolaDAO;
 public class Ricerca {
 	
 	private ParolaDAO dao = new ParolaDAO();
-	
+	List<Parola> result = new ArrayList <Parola>();
 	
 	
 	public List <String> cercaParole (Quadrato q){
@@ -17,7 +17,7 @@ public class Ricerca {
 		
 		int step=0;
 		
-		for(int i = 0; i<16 ; i++){
+		for(int i = 0; i<q.getLato()*q.getLato() ; i++){
 			Parola par = new Parola();
 			Posizione gen = q.getPosizioni().get(i);
 			par.set(gen);
@@ -29,23 +29,36 @@ public class Ricerca {
 		
 	}
 	
-	public void riempiLista ( Quadrato q , List<String> parole , int step , Parola par , Posizione gen){
+	public void riempiLista ( Quadrato q , List<String> parole , int step , Parola par , Posizione gen ){
 		
 		//condizione di uscita momentaneamente errata : condizione di uscita eventuale: posizioni adiacenti tutti occupati
 		//o prossima posizione è outofbound
-		if( step==15){
+		if( step==q.getLato()*q.getLato()-1){
 			return;
 		}
 		else{
 			
 			
-			for(Posizione ins : gen.getAdiacenti()) { 
+			for(Posizione ins : gen.getAdiacenti(q)) { 
 				
 				if(  par.contains(ins) == false ) {
 					
 					par.set(ins);
-					stampaParola(q , parole , par);
-					riempiLista ( q , parole , step+1 , par , ins );
+					
+					//controllo se ne vale la pena continuare e stampare
+					String s = par.toString(q);
+					
+					if(dao.isContenuto(s)==true) {
+						
+					
+					if(s.length()>1 && parole.contains(s)==false && dao.isPresent(s)){
+						parole.add(s);
+						Parola temp = new Parola(par);
+						result.add(temp);
+						System.out.println(s);
+					}
+					riempiLista ( q , parole , step+1 , par , ins);
+					}
 					par.remove(ins);
 					
 				}
@@ -75,25 +88,12 @@ public class Ricerca {
 			
 	}*/
 	
-	private void stampaParola(Quadrato q , List<String> parole , Parola par){
-		String s = "";
-		for(Posizione position : par.get())
-			s += q.get(position);
-		
-		if(s.length()>1 && parole.contains(s)==false && dao.isPresent(s)){
-			parole.add(s);
-			System.out.println(s);
-		}
-		
-	}
 	
 	public static void main (String[] args){
-		Quadrato q = new Quadrato();
+		Quadrato q = new Quadrato(4);
 		Ricerca r = new Ricerca();
 		System.out.println(q.toString());
 		List <String> list = r.cercaParole(q);
-		
-	
 		
 	}
 
