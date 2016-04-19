@@ -2,8 +2,12 @@ package application;
 
 import java.awt.Insets;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.ruzzle.model.Parola;
+import it.polito.tdp.ruzzle.model.Quadrato;
 import it.polito.tdp.ruzzle.model.RuzzleModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -70,6 +75,8 @@ public class RuzzleController {
 
     @FXML
     private TextFlow t15;
+    
+    private GridPane gridPane;
 
     @FXML
     private ListView<String> listView;
@@ -82,6 +89,11 @@ public class RuzzleController {
 
     @FXML
     void doGenera(ActionEvent event) {
+    	Quadrato q = new Quadrato (4);
+    	
+    	
+    	
+    	//Map <Parola , String> grid =  model.genera(q);
 
     }
 

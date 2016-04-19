@@ -36,6 +36,10 @@ public class Quadrato {
 		return posizioni;
 	}
 	
+	public String getStringa(){
+		return stringa;
+	}
+	
 	public String toString(){
 		String s = "";
 		for(int i=1 ; i<=N ; i++){

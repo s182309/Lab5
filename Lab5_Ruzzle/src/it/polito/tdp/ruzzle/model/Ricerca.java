@@ -1,17 +1,25 @@
 package it.polito.tdp.ruzzle.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.dao.ParolaDAO;
 
 public class Ricerca {
 	
-	private ParolaDAO dao = new ParolaDAO();
-	List<Parola> result = new ArrayList <Parola>();
+	private ParolaDAO dao;
+	private Map <Parola , String> result ;
+	
+	public Ricerca(){
+		result = new HashMap <Parola , String>();
+		dao = new ParolaDAO();
+		
+	}
 	
 	
-	public List <String> cercaParole (Quadrato q){
+	public Map < Parola , String> cercaParole (Quadrato q){
 		
 		List <String> parole = new ArrayList <String>();
 		
@@ -21,19 +29,19 @@ public class Ricerca {
 			Parola par = new Parola();
 			Posizione gen = q.getPosizioni().get(i);
 			par.set(gen);
-		riempiLista(q , parole , step , par , gen);
+		riempiLista(q , parole , par , gen ,step);
 		
 		}
-		
-		return parole;
+		dao.close();
+		return result;
 		
 	}
 	
-	public void riempiLista ( Quadrato q , List<String> parole , int step , Parola par , Posizione gen ){
+	public void riempiLista ( Quadrato q , List<String> parole , Parola par , Posizione gen , int step ){
 		
 		//condizione di uscita momentaneamente errata : condizione di uscita eventuale: posizioni adiacenti tutti occupati
 		//o prossima posizione è outofbound
-		if( step==q.getLato()*q.getLato()-1){
+		if( step== q.getLato()*q.getLato()-1 ){
 			return;
 		}
 		else{
@@ -48,18 +56,20 @@ public class Ricerca {
 					//controllo se ne vale la pena continuare e stampare
 					String s = par.toString(q);
 					
-					if(dao.isContenuto(s)==true) {
+					
 						
 					
 					if(s.length()>1 && parole.contains(s)==false && dao.isPresent(s)){
 						parole.add(s);
 						Parola temp = new Parola(par);
-						result.add(temp);
+						result.put(temp , temp.toString(q));
 						System.out.println(s);
 					}
-					riempiLista ( q , parole , step+1 , par , ins);
-					}
+					if(dao.isContenuto(s))
+					riempiLista ( q , parole , par , ins , step+1);
 					par.remove(ins);
+					
+					
 					
 				}
 			}	
@@ -78,14 +88,12 @@ public class Ricerca {
 	}
 	*/
 	
-	/*
-	private boolean canContinue(Quadrato q , Parola par , Posizione p ){
-		for(int i = 0 ; i< 16 ; i++){
-			if( posizioneValida( p , q.getPosizioni().get(i) ) && par.canInsert(q.get(q.getPosizioni().get(i))))
+	
+	/*private boolean canContinue(Quadrato q , Parola par , Posizione p ){
+		for(Posizione ins : p.getAdiacenti(q))
+			if(par.contains(ins)==false)
 				return true;
-		}
-		return false;
-			
+			return false;
 	}*/
 	
 	
@@ -93,7 +101,7 @@ public class Ricerca {
 		Quadrato q = new Quadrato(4);
 		Ricerca r = new Ricerca();
 		System.out.println(q.toString());
-		List <String> list = r.cercaParole(q);
+		r.cercaParole(q);
 		
 	}
 
